@@ -6,9 +6,10 @@ export async function handleAircraft(request, ctx = {}) {
   if (raw.some(v => v === null || !v.trim()) || ![lat,lon,radius].every(Number.isFinite) || lat < -90 || lat > 90 || lon < -180 || lon > 180 || ![50,100,200].includes(radius)) return json({error:'invalid_location'}, 400);
   // Fix the upstream host and validate every path component. No API key is needed.
   const upstream = `https://api.adsb.lol/v2/point/${lat.toFixed(3)}/${lon.toFixed(3)}/${Math.ceil(radius / 1.852)}`;
-  const cache = globalThis.caches?.default;
+  let cache;
   const cacheKey = new Request(upstream);
-  if(cache) { const hit = await cache.match(cacheKey); if(hit) return hit; }
+  // Some Sites runtimes do not expose the Cache API. It is optional.
+  try { cache = globalThis.caches?.default; if(cache) { const hit = await cache.match(cacheKey); if(hit) return hit; } } catch { cache = undefined; }
   let timer;
   try {
     const controller = new AbortController(); timer = setTimeout(() => controller.abort(), 15000);
@@ -25,7 +26,7 @@ export async function handleAircraft(request, ctx = {}) {
     const aircraft = body.ac.slice(0,2000).map(a => Object.fromEntries(fields.filter(k => a[k] !== undefined).map(k => [k,a[k]])));
     const response = json({aircraft, updatedAt:Date.now(), source:'ADSB.lol'});
     response.headers.set('Cache-Control','public, max-age=60');
-    if(cache) { const put=cache.put(cacheKey,response.clone()); if(ctx.waitUntil) ctx.waitUntil(put); else await put; }
+    if(cache) { try { const put=cache.put(cacheKey,response.clone()).catch(()=>{}); if(ctx.waitUntil) ctx.waitUntil(put); else await put; } catch {} }
     return response;
   } catch { return json({error:'provider_unavailable'}, 502); }
   finally { clearTimeout(timer); }

@@ -10,7 +10,7 @@ Radar de aeronaves con **MapLibre GL JS** y datos públicos de **ADSB.lol**. Int
 - Radio de 50, 100 o 200 km. Doble clic en el mapa para consultar otra zona.
 - Zonas de referencia en Madrid, Barcelona, Ciudad de México, Bogotá y Buenos Aires.
 - Búsqueda por indicativo, matrícula o tipo; filtro por estado; favoritos locales.
-- Consulta automática cada cinco minutos mientras la página está visible, actualización manual y caché del servidor de 60 segundos.
+- Consulta automática cada cinco minutos mientras la página está visible, actualización manual y caché opcional del servidor de 60 segundos cuando el alojamiento la admite.
 - Estados de carga, límite de consultas, errores y ausencia de cobertura. No sustituye fallos por datos ficticios.
 
 ## Desarrollo
