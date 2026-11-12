@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+const root = new URL('../',import.meta.url);
+const read = path => fs.readFileSync(new URL(path,root),'utf8');
+const assets = {'/':{type:'text/html; charset=utf-8',body:read('src/index.html')},'/app.js':{type:'text/javascript; charset=utf-8',body:read('src/app.js')},'/vendor/maplibre-gl.js':{type:'text/javascript; charset=utf-8',body:read('vendor/maplibre-gl.js')},'/vendor/maplibre-gl.css':{type:'text/css; charset=utf-8',body:read('vendor/maplibre-gl.css')},'/vendor/LICENSE-maplibre.txt':{type:'text/plain; charset=utf-8',body:read('vendor/LICENSE-maplibre.txt')}};
+const handler = read('worker/handler.js').replace('export async function handleAircraft','async function handleAircraft');
+const output = `const assets=${JSON.stringify(assets)};\n${handler}\nexport default {async fetch(request,env,ctx){const url=new URL(request.url);if(request.method!=='GET'&&request.method!=='HEAD')return new Response('Method not allowed',{status:405});if(url.pathname==='/api/aircraft')return handleAircraft(request,ctx);const asset=assets[url.pathname];if(!asset)return new Response('Not found',{status:404});return new Response(request.method==='HEAD'?null:asset.body,{headers:{'Content-Type':asset.type,'Cache-Control':'no-cache','X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin'}})}};`;
+fs.rmSync(new URL('dist/',root),{recursive:true,force:true});
+fs.mkdirSync(new URL('dist/server/',root),{recursive:true});
+fs.mkdirSync(new URL('dist/.openai/',root),{recursive:true});
+fs.writeFileSync(new URL('dist/server/index.js',root),output);
+fs.copyFileSync(new URL('.openai/hosting.json',root),new URL('dist/.openai/hosting.json',root));
+console.log('Built Worker with embedded app and MapLibre assets');
