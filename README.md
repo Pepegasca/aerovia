@@ -4,7 +4,7 @@ Radar de aeronaves con **MapLibre GL JS** y datos públicos de **ADSB.lol**. Int
 
 ## Funciones
 
-- Mapa geográfico oscuro con teselas de CARTO y OpenStreetMap.
+- Mapa geográfico oscuro con mapas vectoriales de OpenFreeMap, OpenMapTiles y OpenStreetMap, sin API key.
 - Aeronaves posicionadas por latitud/longitud y orientadas por su rumbo.
 - Ubicación del navegador (requiere HTTPS o localhost y permiso del usuario).
 - Radio de 50, 100 o 200 km. Doble clic en el mapa para consultar otra zona.
@@ -42,4 +42,4 @@ La vista inicial consulta Madrid como referencia, no presupone la ubicación del
 
 La cobertura depende de los receptores de ADSB.lol. No se garantizan todos los aviones ni posiciones instantáneas. Este endpoint no incluye rutas, horarios ni aerolíneas confirmados. Los favoritos fuera de la zona actual se identifican como último registro y no aparecen como posiciones actuales en el mapa.
 
-Servicios externos: [ADSB.lol](https://www.adsb.lol/), [CARTO](https://carto.com/attributions), [OpenStreetMap](https://www.openstreetmap.org/copyright) y Google Fonts. Su disponibilidad y sus condiciones de uso siguen siendo aplicables. La interfaz conserva las atribuciones cartográficas.
+Servicios externos: [ADSB.lol](https://www.adsb.lol/), [OpenFreeMap](https://openfreemap.org/) y [OpenMapTiles](https://openmaptiles.org/), [OpenStreetMap](https://www.openstreetmap.org/copyright) y Google Fonts. Su disponibilidad y sus condiciones de uso siguen siendo aplicables. La interfaz conserva las atribuciones cartográficas.
